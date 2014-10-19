@@ -1,0 +1,27 @@
+#specifiy the name of our module.
+ngx_addon_name=ngx_http_eznginx_auth_module
+ngx_addon_module_name=ngx_http_eznginx_auth_module
+
+#Specify additional libraries we need
+ezb_module_lib_deploy_path="/opt/ezfrontend/libs"
+ezb_module_lib_path="$ngx_addon_dir/../../libs"
+ezb_ld_opts="-lstdc++ -Wl,-rpath,$ezb_module_lib_deploy_path"
+ezb_core_libs="-leznginx-module"
+
+ezb_lib_flags="-L$ezb_module_lib_path -Wl,-rpath-link,$ezb_module_lib_path $ezb_core_libs"
+
+#add our module to list of all HTTP modules.
+HTTP_MODULES="$HTTP_MODULES $ngx_addon_module_name"
+
+#add our source files to the lists of all the source files of all the modules that must be assembled.
+NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/src/EzNginxAuthModuleBase.cpp"
+
+#add our depenedent files (*.h) to lists of all depedent files of all modules (usually header files) that should be assembled.
+NGX_ADDON_DEPS="$NGX_ADDON_DEPS $ngx_addon_dir/src/include/EzNginxAuthModuleBase.h"
+
+CORE_LIBS="$ezb_ld_opts $CORE_LIBS $ezb_lib_flags -lm -lrt"
+
+#Specify additional C flags we need
+CFLAGS="$CFLAGS -O0 -g" #TODO (ope): increase optimization and reduce debug once development is complete
+
+#TODO (ope): force the requirement of the http_ssl_module
